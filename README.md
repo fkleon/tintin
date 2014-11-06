@@ -7,7 +7,7 @@ location (the `Ability` class) and not duplicated across controllers,
 views, and database queries.
 
 TinTin is heavily inspired by Ryan Bates' [cancan](https://github.com/ryanb/cancan) and
-its successor cancancan(https://github.com/CanCanCommunity/cancancan) for Ruby
+its successor [cancancan](https://github.com/CanCanCommunity/cancancan) for Ruby
 and Jonathan Tushman's [bouncer](https://github.com/jtushman/bouncer) for Python.
 
 ## How-to
@@ -46,14 +46,14 @@ set_can(['READ'], [Ability.ALL]); // user can read any object
 ```
 
 Currently only arrays are accepted as parameters for `set_can`, even when using only one argument each.
-You can also pass more vlaues to match any one.
+You can also pass more values to match any one.
 
 ```dart
 set_can(['READ', 'RATE'], [Article, Project]);
 
 ```
 
-#### Conditions
+#### Additional Conditions
 
 A list of conditions can be passed as optional argument to further restrict which records this permission applies to.
 
@@ -91,7 +91,7 @@ A user's permission can be checked using the `can` and `cannot` methods on your
 
 ```dart
   User admin = new User(admin: true);
-  Ability adminAbility = new UserAbility(admin);
+  Ability adminAbility = new MyAbility(admin);
   if(adminAbility.can('DELETE', resource)) {
     // do something
   }
