@@ -6,8 +6,8 @@ a given user is allowed to access. All permissions are defined in a single
 location (the `Ability` class) and not duplicated across controllers,
 views, and database queries.
 
-TinTin is heavily inspired by Ryan Bates' [cancan](https://github.com/ryanb/cancan) and
-its successor [cancancan](https://github.com/CanCanCommunity/cancancan) for Ruby
+TinTin is heavily inspired by Ryan Bates' [CanCan](https://github.com/ryanb/cancan) and
+its successor [CanCanCan](https://github.com/CanCanCommunity/cancancan) for Ruby
 and Jonathan Tushman's [bouncer](https://github.com/jtushman/bouncer) for Python.
 
 ## How-to
