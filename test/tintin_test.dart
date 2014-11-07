@@ -3,8 +3,8 @@
  *
  * # Example 1
  *
- * * A [[User]] can be an admin.
- * * An [[Article]] has an author and may or may not be published yet.
+ * * A [User] can be an admin.
+ * * An [Article] has an author and may or may not be published yet.
  *
  * This example implements the following rules:
  *
@@ -15,8 +15,8 @@
  *
  * # Example 2
  *
- * * A [[User]] can be an admin.
- * * A [[Project]] has an author and may be in the release or preview phases.
+ * * A [User] can be an admin.
+ * * A [Project] has an author and may be in the release or preview phases.
  *
  * This example implements the following rules:
  *

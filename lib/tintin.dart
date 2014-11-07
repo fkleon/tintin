@@ -1,5 +1,5 @@
 /**
- * Declarative authorization library.
+ * A declarative authorization library.
  */
 library tintin;
 
@@ -8,9 +8,9 @@ import 'package:collection/collection.dart';
 /// Type definition of a condition function.
 typedef bool Condition<T>(T obj);
 
-/// This class is used internally and should only be called through [[Ability]].
+/// This class is used internally and should only be called through [Ability].
 ///
-/// It hold information about _can_ calls made on [[Ability]] and provides
+/// It hold information about _set_can_ calls made on [Ability] and provides
 /// helpful methods to determine permission checking.
 class Rule {
 
@@ -99,24 +99,31 @@ class RuleList extends DelegatingList<Rule> {
   RuleList(): this._(<Rule>[]);
   RuleList._(l): _l = l, super(l);
 
-  /// Because we can.
+  /// Because we can. Alias to [add].
   can(Rule r) => super.add(r);
 }
 
-/// This exception is thrown by [[Ability]] when a user is not allowed to
+/// This exception is thrown by [Ability] when a user is not allowed to
 /// access a resource.
 class AccessDenied implements Exception {
+  /// The user involved in this exception.
   final String user;
+
+  /// The action which failed to be performed.
   final String action;
+
+  /// The subject of the action.
   final String subject;
 
+  /// Creates a new AccessDenied exception for the given
+  /// user, action and subject.
   AccessDenied(this.user, this.action, this.subject);
 
   @override
   String toString() => 'AccessDenied: "$user" cannot "$action" on "$subject"!';
 }
 
-/// The [[Ability]] class acts as central point of definition for the access
+/// The [Ability] class acts as central point of definition for the access
 /// control rules.
 ///
 /// Users of the TinTin library need to extend this class. This will
@@ -126,10 +133,13 @@ abstract class Ability {
   /// The MANAGE action includes all possible actions.
   static const MANAGE = "TinTin:action:manage";
 
-  /// The ALL suject inclues alll possible subjects.
+  /// The ALL subject inclues alll possible subjects.
   static const ALL = "TinTin:subject:all";
 
+  /// The set of rules active for this ability.
   RuleList rules;
+
+  /// Reference to the custom user object.
   var user;
 
   /// Creates a new ability object.
