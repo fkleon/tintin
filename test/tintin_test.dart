@@ -25,11 +25,11 @@
  */
 library tintin_test;
 
-import 'package:unittest/unittest.dart';
+import 'package:test/test.dart';
 import 'package:tintin/tintin.dart';
 
-part 'article_example_test.dart';
-part 'project_example_test.dart';
+part 'article_example.dart';
+part 'project_example.dart';
 
 main() {
   article_test();

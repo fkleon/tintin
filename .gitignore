@@ -2,6 +2,7 @@
 .project
 pubspec.lock
 .buildlog
+.packages
 
 # Symlinks #
 packages
@@ -10,7 +11,8 @@ packages
 # Folders #
 packages/
 web/out/
+.atom/
+.pub/
 
 # Documentation #
-docs/
-index.html
+doc/

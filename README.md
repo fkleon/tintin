@@ -104,5 +104,9 @@ able to perform the given action.
   adminAbility.ensure('DELETE', resource);
 ```
 
+## Examples
+
+A small example project is included in the tests, see [tintin_test.dart](test/tintin_test.dart).
+
 ## License
 Licensed under the MIT license.
