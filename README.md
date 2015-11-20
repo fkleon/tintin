@@ -10,6 +10,8 @@ TinTin is heavily inspired by Ryan Bates' [CanCan](https://github.com/ryanb/canc
 its successor [CanCanCan](https://github.com/CanCanCommunity/cancancan) for Ruby
 and Jonathan Tushman's [bouncer](https://github.com/jtushman/bouncer) for Python.
 
+[![Build Status](https://drone.io/github.com/fkleon/tintin/status.png)](https://drone.io/github.com/fkleon/tintin/latest)
+
 ## How-to
 
 ### Define Abilities
