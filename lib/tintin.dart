@@ -108,7 +108,7 @@ class RuleList extends DelegatingList<Rule> {
         super(l);
 
   /// Because we can. Alias to [add].
-  can(Rule r) => super.add(r);
+  void can(Rule r) => super.add(r);
 }
 
 /// This exception is thrown by [Ability] when a user is not allowed to
@@ -138,16 +138,16 @@ class AccessDenied implements Exception {
 /// provide the [set_can] and [can] methods for defining and checking abilities.
 abstract class Ability {
   /// The MANAGE action includes all possible actions.
-  static const MANAGE = "TinTin:action:manage";
+  static const MANAGE = 'TinTin:action:manage';
 
   /// The ALL subject inclues alll possible subjects.
-  static const ALL = "TinTin:subject:all";
+  static const ALL = 'TinTin:subject:all';
 
   /// The set of rules active for this ability.
   RuleList rules;
 
   /// Reference to the custom user object.
-  var user;
+  dynamic user;
 
   /// Creates a new ability object.
   Ability([this.user]) {
@@ -156,10 +156,9 @@ abstract class Ability {
 
   /// Returns an array of Rule instances which match the action and subject.
   /// This does not take into consideration any conditions.
-  Iterable<Rule> _relevant_rules(action, subject) {
-    // Reverse to allow general CANs followed by specific CANNOTs
-    return rules.where((r) => r.is_relevant(action, subject)).toList().reversed;
-  }
+  Iterable<Rule> _relevant_rules(action, subject) =>
+      // Reverse to allow general CANs followed by specific CANNOTs
+      rules.where((r) => r.is_relevant(action, subject)).toList().reversed;
 
   /// Defines which abilities are allowed using two arguments. The first one are the actions
   /// you're setting the permission for, the second are is classes of object you're setting it on.
