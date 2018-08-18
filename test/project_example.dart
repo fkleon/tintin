@@ -2,10 +2,9 @@ part of tintin_test;
 
 /// The actual definition of the access control.
 class ProjectUserAbility extends Ability {
-
   /// Creates a new access control object.
-  ProjectUserAbility(User user): super() {
-    if(user.is_admin) {
+  ProjectUserAbility(User user) : super() {
+    if (user.is_admin) {
       // Can manage, but not destroy
       set_can([Ability.MANAGE], [Ability.ALL]);
       set_cannot(['DESTROY'], [Project]);
@@ -33,10 +32,14 @@ void project_test() {
 
   group('[Project]', () {
     test('Admin can manage project', () => _adminShouldBeAbleToManageProject());
-    test('Admin cannot destroy project', () => _adminShouldNotBeAbleToDestroyProject());
-    test('User can view released project', () => _userShouldBeAbleToViewReleasedProject());
-    test('User can view preview project', () => _userShouldBeAbleToViewPreviewProject());
-    test('User cannot view development project', () => _userShouldNotBeAbleToViewDevProject());
+    test('Admin cannot destroy project',
+        () => _adminShouldNotBeAbleToDestroyProject());
+    test('User can view released project',
+        () => _userShouldBeAbleToViewReleasedProject());
+    test('User can view preview project',
+        () => _userShouldBeAbleToViewPreviewProject());
+    test('User cannot view development project',
+        () => _userShouldNotBeAbleToViewDevProject());
   });
 }
 
@@ -49,13 +52,16 @@ _adminShouldNotBeAbleToDestroyProject() {
 }
 
 _userShouldBeAbleToViewReleasedProject() {
-  expect(projectUserAbility.can('READ', new Project(null, true, false)), isTrue);
+  expect(
+      projectUserAbility.can('READ', new Project(null, true, false)), isTrue);
 }
 
 _userShouldBeAbleToViewPreviewProject() {
-  expect(projectUserAbility.can('READ', new Project(null, false, true)), isTrue);
+  expect(
+      projectUserAbility.can('READ', new Project(null, false, true)), isTrue);
 }
 
 _userShouldNotBeAbleToViewDevProject() {
-  expect(projectUserAbility.can('READ', new Project(null, false, false)), isFalse);
+  expect(
+      projectUserAbility.can('READ', new Project(null, false, false)), isFalse);
 }

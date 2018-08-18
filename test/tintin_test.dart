@@ -36,7 +36,6 @@ main() {
   project_test();
 }
 
-
 /// An user.
 /// The is_admin field could also be replaced by roles.
 class User {
@@ -54,6 +53,7 @@ class User {
 class Article {
   /// References the author of this article.
   User author;
+
   /// Specifies if the article is published and ready for public consumption.
   bool published;
 
@@ -68,6 +68,7 @@ class Article {
 class Project {
   /// References the author of this project.
   User author;
+
   /// Specifies if the project is released.
   bool released, preview;
 
