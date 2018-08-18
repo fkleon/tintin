@@ -6,14 +6,13 @@ library tintin;
 import 'package:collection/collection.dart';
 
 /// Type definition of a condition function.
-typedef bool Condition<T>(T obj);
+typedef Condition<T> = bool Function(T obj);
 
 /// This class is used internally and should only be called through [Ability].
 ///
 /// It hold information about _set_can_ calls made on [Ability] and provides
 /// helpful methods to determine permission checking.
-class Rule {
-
+class Rule<T> {
   /// The base behviour of this rule.
   bool base_behaviour;
 
@@ -24,7 +23,7 @@ class Rule {
   List<Object> subjects;
 
   /// A list of conditions assiciated with this rule.
-  List<Condition> conditions;
+  List<Condition<T>> conditions;
 
   /// Creates a new rule with the given parameters.
   ///
@@ -33,21 +32,22 @@ class Rule {
   /// and subject respectively (such as 'READ', Article). The last argument is a list
   /// of conditions.
   Rule(this.base_behaviour, this.actions, this.subjects, this.conditions) {
-    if(this.actions == null) {
+    if (this.actions == null) {
       this.actions = [];
     }
 
-    if(this.conditions == null) {
+    if (this.conditions == null) {
       this.conditions = [];
     }
 
-    if(this.subjects == null) {
+    if (this.subjects == null) {
       this.subjects = [];
     }
   }
 
   @override
-  String toString() => 'Rule[$base_behaviour, if: $actions, $subjects, $conditions]';
+  String toString() =>
+      'Rule[$base_behaviour, if: $actions, $subjects, $conditions]';
 
   /// Matches both the subject and action, not necessarily the conditions
   bool is_relevant(action, subject) =>
@@ -59,25 +59,28 @@ class Rule {
 
   /// Matches the subject
   bool _matches_subject(subject) =>
-      subjects.contains(Ability.ALL) || subjects.contains(subject)
-      || _matches_subject_class(subject);
+      subjects.contains(Ability.ALL) ||
+      subjects.contains(subject) ||
+      _matches_subject_class(subject);
 
   /// Matches the subject class, expects instance or type
   bool _matches_subject_class(subject) {
-    if(subject == null) return false;
+    if (subject == null) return false;
     var subjectClass = _get_type(subject);
-    for(var sub in subjects) {
+    for (var sub in subjects) {
       var subClass = _get_type(sub);
-      if(subjectClass == subClass) return true;
+      if (subjectClass == subClass) return true;
     }
     return false;
   }
 
   /// Get type of obj or null
   Type _get_type(obj) {
-    if(obj == null) return null;
-    if(obj is Type) return obj;
-    else return obj.runtimeType;
+    if (obj == null) return null;
+    if (obj is Type)
+      return obj;
+    else
+      return obj.runtimeType;
   }
 
   /// Matches all conditions, expects an instance of subject.
@@ -85,10 +88,13 @@ class Rule {
   /// Conditions cannot be evaluated on types, therefore [matches_conditions]
   /// always returns true in this case.
   bool matches_conditions(action, subject) {
-    if(this.conditions.isEmpty) return true;
+    if (this.conditions.isEmpty)
+      return true;
     // Conditions cannot be evaluated on a type!
-    else if(subject is Type) return true;
-    else return conditions.fold(true, (prev, cond) => prev && cond(subject));
+    else if (subject is Type)
+      return true;
+    else
+      return conditions.fold(true, (prev, cond) => prev && cond(subject));
   }
 }
 
@@ -96,11 +102,13 @@ class Rule {
 class RuleList extends DelegatingList<Rule> {
   final List<Rule> _l;
 
-  RuleList(): this._(<Rule>[]);
-  RuleList._(l): _l = l, super(l);
+  RuleList() : this._(<Rule>[]);
+  RuleList._(l)
+      : _l = l,
+        super(l);
 
   /// Because we can. Alias to [add].
-  can(Rule r) => super.add(r);
+  void can(Rule r) => super.add(r);
 }
 
 /// This exception is thrown by [Ability] when a user is not allowed to
@@ -129,30 +137,28 @@ class AccessDenied implements Exception {
 /// Users of the TinTin library need to extend this class. This will
 /// provide the [set_can] and [can] methods for defining and checking abilities.
 abstract class Ability {
-
   /// The MANAGE action includes all possible actions.
-  static const MANAGE = "TinTin:action:manage";
+  static const MANAGE = 'TinTin:action:manage';
 
   /// The ALL subject inclues alll possible subjects.
-  static const ALL = "TinTin:subject:all";
+  static const ALL = 'TinTin:subject:all';
 
   /// The set of rules active for this ability.
   RuleList rules;
 
   /// Reference to the custom user object.
-  var user;
+  dynamic user;
 
   /// Creates a new ability object.
-  Ability() {
+  Ability([this.user]) {
     this.rules = new RuleList();
   }
 
   /// Returns an array of Rule instances which match the action and subject.
   /// This does not take into consideration any conditions.
-  Iterable<Rule> _relevant_rules(action, subject) {
-    // Reverse to allow general CANs followed by specific CANNOTs
-    return rules.where((r) => r.is_relevant(action, subject)).toList().reversed;
-  }
+  Iterable<Rule> _relevant_rules(action, subject) =>
+      // Reverse to allow general CANs followed by specific CANNOTs
+      rules.where((r) => r.is_relevant(action, subject)).toList().reversed;
 
   /// Defines which abilities are allowed using two arguments. The first one are the actions
   /// you're setting the permission for, the second are is classes of object you're setting it on.
@@ -174,13 +180,15 @@ abstract class Ability {
   ///      set_can(['READ'], [Project], [(p) => p.userId = userId]);
   ///
   /// IMPORTANT: The conditions will __NOT__ be used when checking permission on a class.
-  void set_can(List<String> actions, List<Object> subjects, {List<Condition> conditions}) {
-    rules.can(new Rule(true, actions, subjects, conditions));
+  void set_can<T>(List<String> actions, List<Object> subjects,
+      {List<Condition<T>> conditions}) {
+    rules.can(new Rule<T>(true, actions, subjects, conditions));
   }
 
   ///  Defines an ability which cannot be done. Accepts the same arguments as [can].
-  void set_cannot(List<String> actions, List<Object> subjects, {List<Condition> conditions}) {
-    rules.can(new Rule(false, actions, subjects, conditions));
+  void set_cannot<T>(List<String> actions, List<Object> subjects,
+      {List<Condition<T>> conditions}) {
+    rules.can(new Rule<T>(false, actions, subjects, conditions));
   }
 
   // TODO alias_action
@@ -202,7 +210,8 @@ abstract class Ability {
   /// However, passing a class will return false if there are conditions attached
   /// to the original rule.
   bool can(action, subject) {
-    Iterable<Rule> matches = _relevant_rules(action, subject).where((r) => r.matches_conditions(action, subject));
+    Iterable<Rule> matches = _relevant_rules(action, subject)
+        .where((r) => r.matches_conditions(action, subject));
     return matches.isNotEmpty ? matches.first.base_behaviour : false;
     /*
     if(matches.isNotEmpty) {
@@ -228,7 +237,7 @@ abstract class Ability {
   /// cannot perform the given action on the given subject.
   void ensure(action, subject) {
     if (cannot(action, subject)) {
-      throw new AccessDenied(user, action, subject);
+      throw new AccessDenied(this.user?.toString(), action, subject);
     }
   }
 }

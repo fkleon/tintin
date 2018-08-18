@@ -2,10 +2,9 @@ part of tintin_test;
 
 /// The actual definition of the access control.
 class ArticleUserAbility extends Ability {
-
   /// Creates a new access control object.
-  ArticleUserAbility(User user): super() {
-    if(user.is_admin) {
+  ArticleUserAbility(User user) : super(user) {
+    if (user.is_admin) {
       // Admins can do anything
       set_can([Ability.MANAGE], [Ability.ALL]);
     } else {
@@ -57,13 +56,20 @@ void article_test() {
 
   group('[Article]', () {
     test('Admin can do everything', () => _adminShouldNotBeRestricted());
-    test('User can read published articles', () => _userShouldBeAbleToReadPublishedArticle());
-    test('User cannot read unpublished articles', () => _userShouldNotBeAbleToReadUnpublishedArticle());
-    test('User can rate published articles', () => _userShouldBeAbleToRatePublishedArticle());
-    test('User cannot rate unpublished articles', () => _userShouldNotBeAbleToRateUnpublishedArticle());
-    test('Author can read and edit own articles', () => _authorShouldBeAbleToReadAndEditOwnArticle());
-    test('Author cannot rate own articles', () => _authorShouldNotBeAbleToRateOwnArticle());
-    test('Ensuring violations should throw', () => _ensuringViolationsShouldThrow());
+    test('User can read published articles',
+        () => _userShouldBeAbleToReadPublishedArticle());
+    test('User cannot read unpublished articles',
+        () => _userShouldNotBeAbleToReadUnpublishedArticle());
+    test('User can rate published articles',
+        () => _userShouldBeAbleToRatePublishedArticle());
+    test('User cannot rate unpublished articles',
+        () => _userShouldNotBeAbleToRateUnpublishedArticle());
+    test('Author can read and edit own articles',
+        () => _authorShouldBeAbleToReadAndEditOwnArticle());
+    test('Author cannot rate own articles',
+        () => _authorShouldNotBeAbleToRateOwnArticle());
+    test('Ensuring violations should throw',
+        () => _ensuringViolationsShouldThrow());
   });
 }
 
@@ -127,5 +133,10 @@ _authorShouldNotBeAbleToRateOwnArticle() {
 }
 
 _ensuringViolationsShouldThrow() {
-  expect(() => userAbility.ensure(Ability.MANAGE, Ability.ALL), throws);
+  expect(
+      () => userAbility.ensure(Ability.MANAGE, Ability.ALL),
+      throwsA(TypeMatcher<AccessDenied>()
+          .having((e) => e.user, 'user', equals(userAbility.user.toString()))
+          .having((e) => e.action, 'action', equals(Ability.MANAGE))
+          .having((e) => e.subject, 'subject', equals(Ability.ALL))));
 }
