@@ -4,7 +4,7 @@ part of tintin_test;
 class ArticleUserAbility extends Ability {
 
   /// Creates a new access control object.
-  ArticleUserAbility(User user): super() {
+  ArticleUserAbility(User user): super(user) {
     if(user.is_admin) {
       // Admins can do anything
       set_can([Ability.MANAGE], [Ability.ALL]);
@@ -127,5 +127,9 @@ _authorShouldNotBeAbleToRateOwnArticle() {
 }
 
 _ensuringViolationsShouldThrow() {
-  expect(() => userAbility.ensure(Ability.MANAGE, Ability.ALL), throws);
+  expect(() => userAbility.ensure(Ability.MANAGE, Ability.ALL), throwsA(TypeMatcher<AccessDenied>()
+    .having((e) => e.user, 'user', equals(userAbility.user.toString()))
+    .having((e) => e.action, 'action', equals(Ability.MANAGE))
+    .having((e) => e.subject, 'subject', equals(Ability.ALL))
+  ));
 }

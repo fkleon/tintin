@@ -4,8 +4,8 @@ author: Frederik Leonhardt <frederik.leonhardt@gmail.com>
 description: A declarative authorization library for Dart.
 homepage: https://github.com/fkleon/tintin
 dependencies:
-  collection: '>=0.9.3 <2.0.0'
+  collection: ^1.14.11
 dev_dependencies:
-  test: '>=0.12.0 <0.13.0'
+  test: ^1.0.0
 environment:
-  sdk: '>=1.0.0 <2.0.0'
+  sdk: ^2.0.0

@@ -6,13 +6,13 @@ library tintin;
 import 'package:collection/collection.dart';
 
 /// Type definition of a condition function.
-typedef bool Condition<T>(T obj);
+typedef Condition<T> = bool Function(T obj);
 
 /// This class is used internally and should only be called through [Ability].
 ///
 /// It hold information about _set_can_ calls made on [Ability] and provides
 /// helpful methods to determine permission checking.
-class Rule {
+class Rule<T> {
 
   /// The base behviour of this rule.
   bool base_behaviour;
@@ -24,7 +24,7 @@ class Rule {
   List<Object> subjects;
 
   /// A list of conditions assiciated with this rule.
-  List<Condition> conditions;
+  List<Condition<T>> conditions;
 
   /// Creates a new rule with the given parameters.
   ///
@@ -143,7 +143,7 @@ abstract class Ability {
   var user;
 
   /// Creates a new ability object.
-  Ability() {
+  Ability([this.user]) {
     this.rules = new RuleList();
   }
 
@@ -174,13 +174,13 @@ abstract class Ability {
   ///      set_can(['READ'], [Project], [(p) => p.userId = userId]);
   ///
   /// IMPORTANT: The conditions will __NOT__ be used when checking permission on a class.
-  void set_can(List<String> actions, List<Object> subjects, {List<Condition> conditions}) {
-    rules.can(new Rule(true, actions, subjects, conditions));
+  void set_can<T>(List<String> actions, List<Object> subjects, {List<Condition<T>> conditions}) {
+    rules.can(new Rule<T>(true, actions, subjects, conditions));
   }
 
   ///  Defines an ability which cannot be done. Accepts the same arguments as [can].
-  void set_cannot(List<String> actions, List<Object> subjects, {List<Condition> conditions}) {
-    rules.can(new Rule(false, actions, subjects, conditions));
+  void set_cannot<T>(List<String> actions, List<Object> subjects, {List<Condition<T>> conditions}) {
+    rules.can(new Rule<T>(false, actions, subjects, conditions));
   }
 
   // TODO alias_action
@@ -228,7 +228,7 @@ abstract class Ability {
   /// cannot perform the given action on the given subject.
   void ensure(action, subject) {
     if (cannot(action, subject)) {
-      throw new AccessDenied(user, action, subject);
+      throw new AccessDenied(this.user?.toString(), action, subject);
     }
   }
 }

@@ -1,3 +1,8 @@
+### 1.0.0
+
+- Add support for Dart 2
+- Remove support for Dart 1
+
 ### 0.1.0+2
 
 - Switch to using `test` instead of `unittest` package
