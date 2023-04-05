@@ -1,6 +1,5 @@
 name: tintin
 version: 1.0.0
-author: Frederik Leonhardt <frederik.leonhardt@gmail.com>
 description: A declarative authorization library for Dart.
 homepage: https://github.com/fkleon/tintin
 dependencies:

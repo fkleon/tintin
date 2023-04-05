@@ -100,12 +100,8 @@ class Rule<T> {
 
 /// A list of rules, only used internally.
 class RuleList extends DelegatingList<Rule> {
-  final List<Rule> _l;
-
   RuleList() : this._(<Rule>[]);
-  RuleList._(l)
-      : _l = l,
-        super(l);
+  RuleList._(l) : super(l);
 
   /// Because we can. Alias to [add].
   void can(Rule r) => super.add(r);
