@@ -1,3 +1,9 @@
+### 2.0.0
+
+- Migrate to null safety
+- Add support for Dart 3
+- Move from Travis CI to GitHub Actions
+
 ### 1.0.0
 
 - Add support for Dart 2
