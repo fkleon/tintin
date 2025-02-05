@@ -20,8 +20,8 @@ class ProjectUserAbility extends Ability {
   }
 }
 
-Ability projectAdminAbility;
-Ability projectUserAbility;
+late Ability projectAdminAbility;
+late Ability projectUserAbility;
 
 void project_test() {
   User admin = new User(true);
@@ -52,16 +52,16 @@ _adminShouldNotBeAbleToDestroyProject() {
 }
 
 _userShouldBeAbleToViewReleasedProject() {
-  expect(
-      projectUserAbility.can('READ', new Project(null, true, false)), isTrue);
+  var p = new Project(new User(true), true, false);
+  expect(projectUserAbility.can('READ', p), isTrue);
 }
 
 _userShouldBeAbleToViewPreviewProject() {
-  expect(
-      projectUserAbility.can('READ', new Project(null, false, true)), isTrue);
+  var p = new Project(new User(true), false, true);
+  expect(projectUserAbility.can('READ', p), isTrue);
 }
 
 _userShouldNotBeAbleToViewDevProject() {
-  expect(
-      projectUserAbility.can('READ', new Project(null, false, false)), isFalse);
+  var p = new Project(new User(true), false, false);
+  expect(projectUserAbility.can('READ', p), isFalse);
 }

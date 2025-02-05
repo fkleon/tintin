@@ -35,12 +35,12 @@ class ArticleUserAbility extends Ability {
   }
 }
 
-Ability adminAbility;
-Ability userAbility;
-Ability authorAbility;
+late Ability adminAbility;
+late Ability userAbility;
+late Ability authorAbility;
 
-Article publishedArticle;
-Article unpublishedArticle;
+late Article publishedArticle;
+late Article unpublishedArticle;
 
 void article_test() {
   User admin = new User(true);
@@ -96,19 +96,21 @@ _userShouldBeAbleToReadPublishedArticle() {
 
 _userShouldNotBeAbleToReadUnpublishedArticle() {
   expect(userAbility.cannot('READ', unpublishedArticle), isTrue);
-  expect(userAbility.cannot('READ', new Article(null, false)), isTrue);
+  expect(
+      userAbility.cannot('READ', new Article(new User(false), false)), isTrue);
 }
 
 _userShouldBeAbleToRatePublishedArticle() {
   expect(userAbility.can('RATE', publishedArticle), isTrue);
   expect(userAbility.cannot('RATE', unpublishedArticle), isTrue);
-  expect(userAbility.can('RATE', new Article(null, true)), isTrue);
+  expect(userAbility.can('RATE', new Article(new User(false), true)), isTrue);
   //expect(userAbility.can('RATE', Article), isTrue);
 }
 
 _userShouldNotBeAbleToRateUnpublishedArticle() {
   expect(userAbility.cannot('RATE', unpublishedArticle), isTrue);
-  expect(userAbility.cannot('RATE', new Article(null, false)), isTrue);
+  expect(
+      userAbility.cannot('RATE', new Article(new User(false), false)), isTrue);
 }
 
 _authorShouldBeAbleToReadAndEditOwnArticle() {
@@ -118,8 +120,8 @@ _authorShouldBeAbleToReadAndEditOwnArticle() {
   expect(authorAbility.can('READ', unpublishedArticle), isTrue);
   expect(authorAbility.can('EDIT', unpublishedArticle), isTrue);
   expect(authorAbility.can('DELETE', unpublishedArticle), isTrue);
-  expect(authorAbility.cannot('EDIT', new Article(null)), isTrue);
-  expect(authorAbility.cannot('DELETE', new Article(null)), isTrue);
+  expect(authorAbility.cannot('EDIT', new Article(new User(false))), isTrue);
+  expect(authorAbility.cannot('DELETE', new Article(new User(false))), isTrue);
   // Generalized to class without condition: true
   expect(authorAbility.can('READ', Article), isTrue);
   expect(authorAbility.can('EDIT', Article), isTrue);
@@ -129,7 +131,7 @@ _authorShouldBeAbleToReadAndEditOwnArticle() {
 _authorShouldNotBeAbleToRateOwnArticle() {
   expect(authorAbility.cannot('RATE', publishedArticle), isTrue);
   expect(authorAbility.cannot('RATE', unpublishedArticle), isTrue);
-  expect(authorAbility.can('RATE', new Article(null, true)), isTrue);
+  expect(authorAbility.can('RATE', new Article(new User(false), true)), isTrue);
 }
 
 _ensuringViolationsShouldThrow() {

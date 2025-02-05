@@ -31,19 +31,10 @@ class Rule<T> {
   /// True for "can" and false for "cannot". The next two arguments are the action
   /// and subject respectively (such as 'READ', Article). The last argument is a list
   /// of conditions.
-  Rule(this.base_behaviour, this.actions, this.subjects, this.conditions) {
-    if (this.actions == null) {
-      this.actions = [];
-    }
-
-    if (this.conditions == null) {
-      this.conditions = [];
-    }
-
-    if (this.subjects == null) {
-      this.subjects = [];
-    }
-  }
+  Rule(this.base_behaviour,
+      [this.actions = const [],
+      this.subjects = const [],
+      this.conditions = const []]);
 
   @override
   String toString() =>
@@ -74,9 +65,8 @@ class Rule<T> {
     return false;
   }
 
-  /// Get type of obj or null
+  /// Get type of obj
   Type _get_type(obj) {
-    if (obj == null) return null;
     if (obj is Type)
       return obj;
     else
@@ -111,7 +101,7 @@ class RuleList extends DelegatingList<Rule> {
 /// access a resource.
 class AccessDenied implements Exception {
   /// The user involved in this exception.
-  final String user;
+  final String? user;
 
   /// The action which failed to be performed.
   final String action;
@@ -140,7 +130,7 @@ abstract class Ability {
   static const ALL = 'TinTin:subject:all';
 
   /// The set of rules active for this ability.
-  RuleList rules;
+  late RuleList rules;
 
   /// Reference to the custom user object.
   dynamic user;
@@ -177,13 +167,13 @@ abstract class Ability {
   ///
   /// IMPORTANT: The conditions will __NOT__ be used when checking permission on a class.
   void set_can<T>(List<String> actions, List<Object> subjects,
-      {List<Condition<T>> conditions}) {
+      {List<Condition<T>> conditions = const []}) {
     rules.can(new Rule<T>(true, actions, subjects, conditions));
   }
 
   ///  Defines an ability which cannot be done. Accepts the same arguments as [can].
   void set_cannot<T>(List<String> actions, List<Object> subjects,
-      {List<Condition<T>> conditions}) {
+      {List<Condition<T>> conditions = const []}) {
     rules.can(new Rule<T>(false, actions, subjects, conditions));
   }
 
